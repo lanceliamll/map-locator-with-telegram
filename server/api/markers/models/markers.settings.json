@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "markers",
+  "info": {
+    "name": "markers"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "longitude": {
+      "type": "float"
+    },
+    "latitude": {
+      "type": "float"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "data": {
+      "type": "json"
+    },
+    "symptoms": {
+      "type": "json"
+    },
+    "mobileNumber": {
+      "type": "string"
+    },
+    "severe": {
+      "type": "boolean",
+      "default": false
+    },
+    "common": {
+      "type": "boolean",
+      "default": false
+    },
+    "uncommon": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
