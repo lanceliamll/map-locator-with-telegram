@@ -6,7 +6,7 @@ import { Icon } from "react-native-elements"
 
 const Register = ({ navigation }) => {
 
-  const { userRegister } = useContext(GlobalContext);
+  const { userRegister, getCurrentLocation } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue } = useForm();
 
