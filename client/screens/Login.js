@@ -24,7 +24,6 @@ const Login = ({ navigation }) => {
 
   const loginUser = (data) => {
     login(data);
-    Alert.alert('Success', "Login Successfully")
   }
 
   return (
