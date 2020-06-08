@@ -63,7 +63,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     // header
     navigation.setOptions({
-      headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer() } />,
+      headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
       headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
     })
 

@@ -24,9 +24,18 @@ const Register = ({ navigation }) => {
 
 
   const registerUser = (formData) => {
-    userRegister(formData);
-    Alert.alert("Success", "Registered Successfully");
-    navigation.navigate("Login")
+    const { username, email, password } = formData;
+    if (username === null ||
+      username === undefined ||
+      email === null ||
+      email === undefined ||
+      password === null ||
+      password === undefined) Alert.alert("Error", "Please fill out all the mandatory fields");
+    else {
+      userRegister(formData);
+      Alert.alert("Success", "Registered Successfully");
+      navigation.navigate("Login")
+    }
   }
 
   return (
@@ -45,7 +54,7 @@ const Register = ({ navigation }) => {
         onChangeText={text => setValue("password", text)}
         style={styles.input}
         placeholder=" Password"
-        secureTextEntry={true} 
+        secureTextEntry={true}
       />
       <Button onPress={handleSubmit(registerUser)} title="Register" style={styles.input} />
     </View>

@@ -8,28 +8,28 @@ import { Icon } from "react-native-elements"
 const Login = ({ navigation }) => {
   const { login, auth, getCurrentLocation, getAllMarkers } = useContext(GlobalContext);
 
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, setError, clearError, errors } = useForm();
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />
     });
-
     getCurrentLocation();
-
     register("identifier");
     register("password");
   }, [register]);
 
 
   const loginUser = (data) => {
-    login(data);
+    const { identifier, password } = data
+    if(identifier === null || identifier === undefined || password === null || password === undefined) Alert.alert("Error", "Please enter your username/password");
+    else login(data);
   }
 
   return (
     <View style={styles.container}>
       <TextInput
-        onChangeText={text => setValue("identifier", text)}
+        onChangeText={text =>setValue("identifier", text)}
         style={styles.input}
         placeholder=" Username"
       />

@@ -7,7 +7,7 @@ import axios from "axios";
 
 const AddReport = ({ navigation }) => {
   // store
-  const { auth, markers, currentLocation, getCurrentLocation, reportLocation, logout } = useContext(GlobalContext);
+  const { auth, markers, currentLocation, getCurrentLocation, reportLocation, logout, getAllMarkers } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue } = useForm();
 
@@ -34,7 +34,7 @@ const AddReport = ({ navigation }) => {
   useEffect(() => {
 
     navigation.setOptions({
-      headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer() } />,
+      headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
       headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
     })
 
@@ -71,22 +71,29 @@ const AddReport = ({ navigation }) => {
       ]
     }
 
-    if (currentLocation === null) {
-      Alert.alert("Location Error", "Please turn on your GPS and try again")
-      getCurrentLocation();
-    } else {
-      axios.post("https://api.telegram.org/bot1139102468:AAG53n8z57t1t4vnrkDWQJgoM7o03OW5c5o/sendMessage", {
-        "chat_id": "-1001252205511",
-        "text": `Email: ${auth.user.email} \n Mobile Number: ${formData.mobileNumber} \n Severe: ${severe} \n Common: ${common} \n Uncommon: ${uncommon} \n Location: http://google.com/maps?q=${currentLocation.coords.latitude},${currentLocation.coords.longitude}
-                `
-      }).then(res => {
-        console.log(res);
-      }).catch(err => console.log(err))
+    const { mobileNumber } = formData;
 
-      const form = Object.assign({}, formData, otherData, locationData);
-      reportLocation(form);
-      Alert.alert('Success', "Reported Successfully");
-      navigation.goBack();
+    if (mobileNumber === null || mobileNumber === undefined) {
+      Alert.alert("Error", "Mobile Number is required and identify the symptoms");
+    } else {
+      if (currentLocation === null) {
+        Alert.alert("Location Error", "Please turn on your GPS and try again.")
+        getCurrentLocation();
+      } else {
+        axios.post("https://api.telegram.org/bot1139102468:AAG53n8z57t1t4vnrkDWQJgoM7o03OW5c5o/sendMessage", {
+          "chat_id": "-1001252205511",
+          "text": `Email: ${auth.user.email} \n Mobile Number: ${formData.mobileNumber} \n Severe: ${severe} \n Common: ${common} \n Uncommon: ${uncommon} \n Location: http://google.com/maps?q=${currentLocation.coords.latitude},${currentLocation.coords.longitude}
+      `
+        }).then(res => {
+          console.log(res);
+        }).catch(err => console.log(err))
+
+        const form = Object.assign({}, formData, otherData, locationData);
+        reportLocation(form);
+        Alert.alert('Success', "Reported Successfully");
+        getAllMarkers();
+        navigation.goBack();
+      }
     }
 
   }
