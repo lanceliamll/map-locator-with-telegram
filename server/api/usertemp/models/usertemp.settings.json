@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "usertemps",
+  "info": {
+    "name": "usertemp"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "currentTemperature": {
+      "type": "string"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}

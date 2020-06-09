@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/usertemps",
+      "handler": "usertemp.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/usertemps/count",
+      "handler": "usertemp.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/usertemps/:id",
+      "handler": "usertemp.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/usertemps",
+      "handler": "usertemp.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/usertemps/:id",
+      "handler": "usertemp.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/usertemps/:id",
+      "handler": "usertemp.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
