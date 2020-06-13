@@ -59,6 +59,15 @@
     },
     "name": {
       "type": "string"
+    },
+    "age": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "string"
+    },
+    "municipality": {
+      "type": "string"
     }
   }
 }

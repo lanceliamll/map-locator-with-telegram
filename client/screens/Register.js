@@ -14,9 +14,7 @@ const Register = ({ navigation }) => {
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
     });
-
-    getCurrentLocation
-
+    getCurrentLocation();
     register("username");
     register("email");
     register("password");

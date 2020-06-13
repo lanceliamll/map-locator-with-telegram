@@ -45,6 +45,10 @@
     "uncommon": {
       "type": "boolean",
       "default": false
+    },
+    "communityCases": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -51,6 +51,7 @@ const AddReport = ({ navigation }) => {
   const [severeModal, setSevereModal] = useState(false);
   const [commonModal, setCommmonModal] = useState(false);
   const [uncommonModal, setUncommonModal] = useState(false);
+  const [communityCases, setCommunityCases] = useState(false);
 
 
   const report = formData => {
@@ -60,7 +61,8 @@ const AddReport = ({ navigation }) => {
       user: auth.user.id,
       severe,
       common,
-      uncommon
+      uncommon,
+      communityCases
     }
 
     const locationData = {
@@ -166,12 +168,13 @@ const AddReport = ({ navigation }) => {
         </View>
       </Modal>
 
-      <TextInput
+      {/* <TextInput
         onChangeText={text => setValue("mobileNumber", text)}
         style={styles.input}
         placeholder=" Mobile Number"
         keyboardType="numeric"
-      />
+      /> */}
+
       <View >
         <View style={styles.checkBoxes}>
           <CheckBox value={severe} onValueChange={() => severe ? setSevere(false) : setSevere(true)} />
@@ -185,6 +188,11 @@ const AddReport = ({ navigation }) => {
           <CheckBox value={uncommon} onValueChange={() => uncommon ? setUncommon(false) : setUncommon(true)} />
           <Text>Uncommon Symptoms   <Text style={styles.readMore} onPress={() => uncommonModal ? setUncommonModal(false) : setUncommonModal(true)}>Read More</Text></Text>
         </View>
+      </View>
+
+      <View style={styles.checkBoxes}>
+        <CheckBox value={uncommon} onValueChange={() => communityCases ? setCommunityCases(false) : setCommunityCases(true)} />
+        <Text>Is there any infected in your community?</Text>
       </View>
       <View style={styles.reportButton}>
         <Button onPress={handleSubmit(report)} title="Report" style={styles.input} />

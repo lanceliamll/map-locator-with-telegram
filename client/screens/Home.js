@@ -9,7 +9,6 @@ const Home = ({ navigation }) => {
 
   // get globalstate
   const { fetching, auth, getAllMarkers, markers, saveLocation, getUserSavedLocation, logout } = useContext(GlobalContext);
-
   // current location
   const [currentPosition, setCurrentPosition] = useState(null);
   // markers 
@@ -22,11 +21,8 @@ const Home = ({ navigation }) => {
         const locationWithId = Object.assign({ data: position }, { user: auth.user.id });
         const location = JSON.stringify(position);
         setCurrentPosition(JSON.parse(location));
-
         // post to saved location
         // saveLocation(locationWithId);
-
-        // console.log("USER CURRENT POSITIOn", currentPosition)
       },
       error => Alert.alert(error.message),
       { enableHighAccuracy: true, timeout: 1000, maximumAge: 1000 }
@@ -65,7 +61,7 @@ const Home = ({ navigation }) => {
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
       headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
-    })
+    });
 
     getAllMarkers();
     getUserSavedLocation(auth.user.id);
@@ -83,6 +79,7 @@ const Home = ({ navigation }) => {
   }, [navigation]);
 
   if (fetching) return <ActivityIndicator size="large" color="#0000ff" />;
+  // if(auth.user.age === null || age.user.gender === null) navigation.navigate("Setup");
   try {
     return (
       <View>
