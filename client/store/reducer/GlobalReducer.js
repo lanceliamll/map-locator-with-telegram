@@ -45,6 +45,14 @@ const GlobalReducer = (state, action) => {
         ...state,
         fetching: payload
       }
+    case "SAVE_USER":
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          user: payload
+        }
+      }
     default:
       return state;
   }

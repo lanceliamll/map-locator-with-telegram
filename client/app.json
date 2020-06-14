@@ -23,6 +23,10 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.project.maptracker",
+      "versionCode": 1
     }
   }
 }

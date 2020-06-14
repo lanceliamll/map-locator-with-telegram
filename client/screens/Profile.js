@@ -1,19 +1,30 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Text, Button, View, Alert, StyleSheet, Modal, TextInput } from "react-native";
 import { GlobalContext } from "../store/context/GlobalContext";
-import { Icon } from "react-native-elements"
+import { Icon, Avatar } from "react-native-elements";
+import RNPickerSelect from 'react-native-picker-select';
+import citiesJSON from "../helpers/cities.json"
 
 const Profile = ({ navigation }) => {
 
   // get global
-  const { auth, logout } = useContext(GlobalContext);
+  const { auth, logout, storeTokenWithUser, saveAge, saveGender, saveMunicipality } = useContext(GlobalContext);
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
       headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
-    })
-  }, []);
+    });
+
+    const userToken = {
+      userToken: "Bearer " + auth.jwt,
+      id: auth.user.id
+    }
+    console.log(userToken)
+
+    storeTokenWithUser(userToken);
+    if (!allMunicip.length) setAllMunicip(transformUserMunicip(citiesJSON));
+  }, [storeTokenWithUser]);
 
   //modal
   const [showAge, setShowAge] = useState(false);
@@ -21,7 +32,20 @@ const Profile = ({ navigation }) => {
   const [showMunicipality, setShowMunicipality] = useState(false);
 
   // age
-  const [userAge, setUserAge] = useState(auth.age || null)
+  const [userAge, setUserAge] = useState(auth.age || 0);
+  const [userGender, setUserGender] = useState(auth.gender || null);
+  const [userMunicip, setUserMunicip] = useState(auth.municipality || null);
+
+  const [allMunicip, setAllMunicip] = useState([])
+
+  const transformUserMunicip = (cities) => {
+    return cities.map(city => {
+      return {
+        label: city.name,
+        value: city.name
+      }
+    });
+  }
 
   const logoutToApp = () => {
     Alert.alert("Logout", "Are you sure you want to logout?",
@@ -36,18 +60,62 @@ const Profile = ({ navigation }) => {
     )
   }
 
-  const { username, email, age, gender, municipality } = auth.user
+
+
+  const submitAge = age => {
+    const { id } = auth.user;
+    console.log(id)
+    const data = {
+      age
+    }
+    saveAge(id, data);
+    setShowAge(false);
+    Alert.alert("Success", "Saved Successfully");
+  };
+
+  const submitGender = gender => {
+    const { id } = auth.user;
+    const data = {
+      gender
+    }
+    saveGender(id, data);
+    setShowGender(false);
+    Alert.alert("Success", "Saved Successfully");
+  };
+
+  const submitMunicipality = municipality => {
+    const { id } = auth.user;
+    const data = {
+      municipality
+    }
+    saveMunicipality(id, data);
+    setShowMunicipality(false);
+    Alert.alert("Success", "Saved Successfully");
+  }
+
+  const { username, email, age, gender, municipality } = auth.user;
+  if (auth.user === null) return null;
 
   return (
     <View style={styles.container}>
+      <View style={styles.photo}>
+        {/* {console.log(auth.user.profilePic.url)}
+        <Avatar
+          size="xlarge"
+          rounded
+          source={{
+            uri: "https://map-tracker-tele.herokuapp.com" + auth.user.profilePic.url || null
+          }}
+        /> */}
+      </View>
       <View style={styles.textTitleContainer}>
         <Text style={styles.textTitle}>Username:</Text>
-        <Text style={styles.textLabel}>{username}</Text>
+        <Text style={styles.textLabel}>{username || null}</Text>
         <Text>       </Text>
       </View>
       <View style={styles.textTitleContainer}>
         <Text style={styles.textTitle}>Email:</Text>
-        <Text style={styles.textLabel}>{email}</Text>
+        <Text style={styles.textLabel}>{email || null}</Text>
         <Text>       </Text>
       </View>
       <View style={styles.textTitleContainer}>
@@ -83,7 +151,7 @@ const Profile = ({ navigation }) => {
             maxLength={3}
           />
           <View>
-            <Button title="Save" />
+            <Button onPress={() => submitAge(userAge)} title="Save" />
             <Text></Text>
             <Button onPress={() => setShowAge(false)} title="Cancel" />
           </View>
@@ -99,9 +167,18 @@ const Profile = ({ navigation }) => {
         }}
       >
         <View style={styles.modalView}>
-          <TextInput style={styles.input} placeholder="Gender" />
-          <View>
-            <Button title="Save" />
+          {/* <TextInput style={styles.input} placeholder="Gender" /> */}
+          <RNPickerSelect
+            style={styles.dropdown}
+            onValueChange={(value) => setUserGender(value)}
+            items={[
+              { label: 'Male', value: 'Male' },
+              { label: 'Female', value: 'Female' },
+              { label: 'Others', value: 'Others' },
+            ]}
+          />
+          <View style={styles.buttons}>
+            <Button onPress={() => submitGender(userGender)} title="Save" />
             <Text></Text>
             <Button onPress={() => setShowGender(false)} title="Cancel" />
           </View>
@@ -117,9 +194,13 @@ const Profile = ({ navigation }) => {
         }}
       >
         <View style={styles.modalView}>
-          <TextInput style={styles.input} placeholder="Municipality" />
+          <RNPickerSelect
+            style={styles.dropdown}
+            onValueChange={(value) => setUserMunicip(value)}
+            items={allMunicip.length && allMunicip}
+          />
           <View>
-            <Button title="Save" />
+            <Button onPress={() => submitMunicipality(userMunicip)} title="Save" />
             <Text></Text>
             <Button onPress={() => setShowMunicipality(false)} title="Cancel" />
           </View>
@@ -195,5 +276,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
+  dropdown: {
+    color: "black"
+  },
+  photo: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10
+  }
 })
 

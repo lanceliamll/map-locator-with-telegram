@@ -23,7 +23,7 @@ export const GlobalProvider = ({ children }) => {
       payload: true
     });
     try {
-      const res = await axios.get("http://192.168.100.18:1337/markers", {
+      const res = await axios.get("https://map-tracker-tele.herokuapp.com/markers", {
         headers: {
           "Content-Type": "application/json"
         }
@@ -68,7 +68,7 @@ export const GlobalProvider = ({ children }) => {
         payload: true
       });
 
-      const res = await axios.get(`http://192.168.100.18:1337/saved-locations?user.id=${id}`, {
+      const res = await axios.get(`https://map-tracker-tele.herokuapp.com/saved-locations?user.id=${id}`, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -97,7 +97,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post("http://192.168.100.18:1337/auth/local", body, {
+      const res = await axios.post("https://map-tracker-tele.herokuapp.com/auth/local", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -116,7 +116,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
     console.log(body);
     try {
-      await axios.post("http://192.168.100.18:1337/auth/local/register", body, {
+      await axios.post("https://map-tracker-tele.herokuapp.com/auth/local/register", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -137,7 +137,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post("http://192.168.100.18:1337/markers", body, {
+      const res = await axios.post("https://map-tracker-tele.herokuapp.com/markers", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -158,7 +158,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post('http://192.168.100.18:1337/saved-locations', body, {
+      const res = await axios.post('https://map-tracker-tele.herokuapp.com/saved-locations', body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -171,6 +171,100 @@ export const GlobalProvider = ({ children }) => {
 
     } catch (error) {
       console.error("Post to location error", error);
+    }
+  }
+
+  const storeTokenWithUser = async (data) => {
+    const token = {
+      userToken: data.userToken
+    }
+    const body = JSON.stringify(token);
+
+    axios.get("https://map-tracker-tele.herokuapp.com/tokens")
+      .then(res => {
+        res.data.map(d => {
+          // if no data post
+          if (!res.data.length) {
+            axios.post("https://map-tracker-tele.herokuapp.com/tokens", body,
+              {
+                headers: {
+                  "Content-Type": "application/json"
+
+                }
+              })
+              .then(res => console.log("Success"))
+              .catch(err => console.log("Failed POST"))
+          } else {
+            // else put
+            axios.put(`https://map-tracker-tele.herokuapp.com/tokens/${d.id}`, body, {
+              headers: {
+                "Content-Type": "application/json"
+
+              }
+            })
+              .then(res => console.log("Success"))
+              .catch(err => console.log("Failed PUT", err))
+          }
+        });
+      })
+  }
+
+  const saveAge = async (id, age) => {
+    const body = JSON.stringify(age);
+
+    try {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
+        headers: {
+          "Content-Type": "application/json"
+
+        }
+      });
+      dispatch({
+        type: "SAVE_USER",
+        payload: res.data
+      });
+
+    } catch (error) {
+      console.log("Update user Age error", error)
+    }
+  };
+
+  const saveGender = async (id, gen) => {
+    const body = JSON.stringify(gen);
+
+    try {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
+        headers: {
+          "Content-Type": "application/json"
+
+        }
+      });
+      dispatch({
+        type: "SAVE_USER",
+        payload: res.data
+      });
+
+    } catch (error) {
+      console.log("Update user Age error", error)
+    }
+  }
+
+  const saveMunicipality = async (id, mun) => {
+    const body = JSON.stringify(mun);
+
+    try {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
+        headers: {
+          "Content-Type": "application/json"
+
+        }
+      });
+      dispatch({
+        type: "SAVE_USER",
+        payload: res.data
+      });
+    } catch (error) {
+      console.log("Update user Age error", error)
     }
   }
 
@@ -189,7 +283,11 @@ export const GlobalProvider = ({ children }) => {
       saveLocation,
       getCurrentLocation,
       getUserSavedLocation,
-      reportLocation
+      reportLocation,
+      storeTokenWithUser,
+      saveAge,
+      saveGender,
+      saveMunicipality
     }}>
       {children}
     </GlobalContext.Provider>

@@ -7,7 +7,7 @@ const Precaution = ({ navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer() } />,
+      headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
       headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
     })
   }, []);
@@ -33,7 +33,6 @@ const Precaution = ({ navigation }) => {
         {/* Content */}
         <View style={styles.subContainer}>
           <Text style={styles.subTitle}>You can reduce your chances of being infected or spreading COVID-19 by taking some simple precautions:</Text>
-
           <Text style={styles.bullet}>{'\u2B24'} Regularly and thoroughly clean your hands with an alcohol-based hand rub or wash them with soap and water. Why? Washing your hands with soap and water or using alcohol-based hand rub kills viruses that may be on your hands.</Text>
           <Text style={styles.bullet}>{'\u2B24'} Maintain at least 1 metre (3 feet) distance between yourself and others. Why? When someone coughs, sneezes, or speaks they spray small liquid droplets from their nose or mouth which may contain virus. If you are too close, you can breathe in the droplets, including the COVID-19 virus if the person has the disease.</Text>
           <Text style={styles.bullet}>{'\u2B24'} Avoid going to crowded places. Why? Where people come together in crowds, you are more likely to come into close contact with someone that has COIVD-19 and it is more difficult to maintain physical distance of 1 metre (3 feet).</Text>
