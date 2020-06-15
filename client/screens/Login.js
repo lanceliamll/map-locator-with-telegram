@@ -1,14 +1,15 @@
-import React, { useContext, useEffect } from "react";
-import { Text, Button, View, TextInput, StyleSheet, Alert } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Text, View, TextInput, StyleSheet, Alert } from "react-native";
 import { GlobalContext } from "../store/context/GlobalContext";
 import { useForm } from "react-hook-form";
-import { Icon } from "react-native-elements"
+import { Icon, Button } from "react-native-elements"
 
 
 const Login = ({ navigation }) => {
-  const { login, auth, getCurrentLocation, getAllMarkers } = useContext(GlobalContext);
+  const { login, auth, getCurrentLocation, getAllMarkers, error, fetching } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue, setError, clearError, errors } = useForm();
+  const [credErrors, setCredErrors] = useState(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -21,9 +22,21 @@ const Login = ({ navigation }) => {
 
 
   const loginUser = (data) => {
-    const { identifier, password } = data
+    const { identifier, password } = data;
     if(identifier === null || identifier === undefined || password === null || password === undefined) Alert.alert("Error", "Please enter your username/password");
-    else login(data);
+    else {
+      login(data)
+        .then(res => {
+          if(!res.success) {
+            Alert.alert("Error", "Invalid Credentials");
+          } else {
+            Alert.alert("Success", "Login Successfully");
+          }
+          console.log(res.success)
+        })
+        .catch(err => console.log(err))
+    }
+
   }
 
   return (
@@ -39,7 +52,7 @@ const Login = ({ navigation }) => {
         placeholder=" Password"
         secureTextEntry={true} 
       />
-      <Button onPress={handleSubmit(loginUser)} title="Login" style={styles.input} />
+      <Button loading={fetching} onPress={handleSubmit(loginUser)} title="Login" style={styles.input} />
     </View>
   )
 }

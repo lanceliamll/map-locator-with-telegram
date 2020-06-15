@@ -14,7 +14,6 @@ const AppRoutes = () => {
   return (
     <>
       <DrawerStack.Navigator initialRouteName={auth ? "HomeStackScreen" : "LoginStackScreen"} >
-        {/* {auth && auth.user.age === null ? <DrawerStack.Screen name="Setup" component={SetupStackScreen} /> : null} */}
         {auth ? (
           <>
             <DrawerStack.Screen name="Profile" component={ProfileStackScreen} />

@@ -40,6 +40,11 @@ const GlobalReducer = (state, action) => {
         ...state,
         auth: null
       }
+    case "LOGIN_ERROR":
+      return {
+        ...state,
+        error: payload
+      }
     case "FETCH":
       return {
         ...state,

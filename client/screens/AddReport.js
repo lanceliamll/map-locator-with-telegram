@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, TextInput, Button, View, Picker, StyleSheet, CheckBox, Modal, Alert } from "react-native";
+import { Text, TextInput, View, Picker, StyleSheet, CheckBox, Modal, Alert } from "react-native";
 import { GlobalContext, GlobalProvider } from "../store/context/GlobalContext";
 import { useForm } from "react-hook-form";
-import { Icon } from 'react-native-elements'
+import { Icon, Button } from 'react-native-elements'
 import axios from "axios";
 
 const AddReport = ({ navigation }) => {
   // store
-  const { auth, markers, currentLocation, getCurrentLocation, reportLocation, logout, getAllMarkers } = useContext(GlobalContext);
+  const { auth, markers, fetching,  currentLocation, getCurrentLocation, reportLocation, logout, getAllMarkers } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue } = useForm();
 
@@ -73,31 +73,26 @@ const AddReport = ({ navigation }) => {
       ]
     }
 
-    const { mobileNumber } = formData;
-
-    if (mobileNumber === null || mobileNumber === undefined) {
-      Alert.alert("Error", "Mobile Number is required and identify the symptoms");
+    if (currentLocation === null) {
+      Alert.alert("Location Error", "Please turn on your GPS and try again.")
+      getCurrentLocation();
+    }else if (!severe && !common && !uncommon){
+      Alert.alert("Error", "You should atleat select 1 symptom category.")
     } else {
-      if (currentLocation === null) {
-        Alert.alert("Location Error", "Please turn on your GPS and try again.")
-        getCurrentLocation();
-      } else {
-        axios.post("https://api.telegram.org/bot1139102468:AAG53n8z57t1t4vnrkDWQJgoM7o03OW5c5o/sendMessage", {
-          "chat_id": "-1001252205511",
-          "text": `Email: ${auth.user.email} \n Mobile Number: ${formData.mobileNumber} \n Severe: ${severe} \n Common: ${common} \n Uncommon: ${uncommon} \n Location: http://google.com/maps?q=${currentLocation.coords.latitude},${currentLocation.coords.longitude}
+      axios.post("https://api.telegram.org/bot1139102468:AAG53n8z57t1t4vnrkDWQJgoM7o03OW5c5o/sendMessage", {
+        "chat_id": "-1001252205511",
+        "text": `Email: ${auth.user.email} \n Mobile Number: ${formData.mobileNumber} \n Severe: ${severe} \n Common: ${common} \n Uncommon: ${uncommon} \n Location: http://google.com/maps?q=${currentLocation.coords.latitude},${currentLocation.coords.longitude}
       `
-        }).then(res => {
-          console.log(res);
-        }).catch(err => console.log(err))
+      }).then(res => {
+        console.log(res);
+      }).catch(err => console.log(err))
 
-        const form = Object.assign({}, formData, otherData, locationData);
-        reportLocation(form);
-        Alert.alert('Success', "Reported Successfully");
-        getAllMarkers();
-        navigation.goBack();
-      }
+      const form = Object.assign({}, formData, otherData, locationData);
+      reportLocation(form);
+      Alert.alert('Success', "Reported Successfully");
+      getAllMarkers();
+      navigation.goBack();
     }
-
   }
 
   return (
@@ -195,7 +190,7 @@ const AddReport = ({ navigation }) => {
       </View>
 
       <View style={styles.reportButton}>
-        <Button onPress={handleSubmit(report)} title="Report" style={styles.input} />
+        <Button loading={fetching} onPress={handleSubmit(report)} title="Report" style={styles.input} />
         <Text>Note: Your location will be automatically submitted with this form.</Text>
       </View>
     </View>

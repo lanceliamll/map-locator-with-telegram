@@ -11,18 +11,14 @@ const Home = ({ navigation }) => {
   const { fetching, auth, getAllMarkers, markers, saveLocation, getUserSavedLocation, logout } = useContext(GlobalContext);
   // current location
   const [currentPosition, setCurrentPosition] = useState(null);
-  // markers 
-  const [currentMarks, setCurrentMarks] = useState([]);
 
   const getCurrentPosition = () => {
     // get current location 
     navigator.geolocation.getCurrentPosition(
       position => {
-        const locationWithId = Object.assign({ data: position }, { user: auth.user.id });
+        // const locationWithId = Object.assign({ data: position }, { user: auth.user.id });
         const location = JSON.stringify(position);
         setCurrentPosition(JSON.parse(location));
-        // post to saved location
-        // saveLocation(locationWithId);
       },
       error => Alert.alert(error.message),
       { enableHighAccuracy: true, timeout: 1000, maximumAge: 1000 }
@@ -64,22 +60,20 @@ const Home = ({ navigation }) => {
     });
 
     getAllMarkers();
-    getUserSavedLocation(auth.user.id);
     getCurrentPosition();
+    // getUserSavedLocation(auth.user.id);
 
     // get every 30 minutes
     setTimeout(() => {
       getAllMarkers();
       getCurrentPosition();
     }, 1800000);
-    // setTimeout(() => {
-    //   getCurrentPosition();
-    // }, 1800000);
-    //real time 1800000
+
+    console.log("is fetching",fetching)
+
   }, [navigation]);
 
   if (fetching) return <ActivityIndicator size="large" color="#0000ff" />;
-  // if(auth.user.age === null || age.user.gender === null) navigation.navigate("Setup");
   try {
     return (
       <View>

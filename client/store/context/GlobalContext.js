@@ -8,6 +8,7 @@ const initialState = {
   savedLocations: [],
   currentLocation: null,
   fetching: false,
+  error: null
 }
 
 export const GlobalContext = createContext(initialState);
@@ -94,6 +95,12 @@ export const GlobalProvider = ({ children }) => {
   // post 
   const login = async (data) => {
 
+
+    dispatch({
+      type: "FETCH",
+      payload: true
+    });
+
     const body = JSON.stringify(data);
 
     try {
@@ -102,19 +109,43 @@ export const GlobalProvider = ({ children }) => {
           "Content-Type": "application/json"
         }
       });
+
       dispatch({
         type: "LOGIN",
         payload: res.data
       });
 
+
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
+
+      return {
+        success: true,
+      }
+
     } catch (error) {
       console.error("Login user", error);
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
+
+      return {
+        success: false
+      }
     }
   }
 
   const userRegister = async data => {
     const body = JSON.stringify(data);
-    console.log(body);
+
+    dispatch({
+      type: "FETCH",
+      payload: true
+    });
+
     try {
       await axios.post("https://map-tracker-tele.herokuapp.com/auth/local/register", body, {
         headers: {
@@ -122,7 +153,16 @@ export const GlobalProvider = ({ children }) => {
         }
       });
 
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
+
     } catch (error) {
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
       console.error("Register user", error);
     }
   }
@@ -136,6 +176,11 @@ export const GlobalProvider = ({ children }) => {
   const reportLocation = async data => {
     const body = JSON.stringify(data);
 
+    dispatch({
+      type: "FETCH",
+      payload: true
+    });
+
     try {
       const res = await axios.post("https://map-tracker-tele.herokuapp.com/markers", body, {
         headers: {
@@ -146,9 +191,18 @@ export const GlobalProvider = ({ children }) => {
       dispatch({
         type: "REPORT_LOCATION",
         payload: res.data
-      })
+      });
+
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
 
     } catch (error) {
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
       console.error("Login user", error);
     }
   }
@@ -276,6 +330,7 @@ export const GlobalProvider = ({ children }) => {
       currentLocation: state.currentLocation,
       fetching: state.fetching,
       savedLocations: state.savedLocations,
+      error: state.error,
       login,
       logout,
       userRegister,

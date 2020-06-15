@@ -1,12 +1,12 @@
 import React, { useEffect, useContext } from "react";
-import { Text, TextInput, Button, View, StyleSheet, Alert } from "react-native";
+import { Text, TextInput, View, StyleSheet, Alert } from "react-native";
 import { GlobalContext } from "../store/context/GlobalContext";
 import { useForm } from "react-hook-form";
-import { Icon } from "react-native-elements"
+import { Icon, Button } from "react-native-elements"
 
 const Register = ({ navigation }) => {
 
-  const { userRegister, getCurrentLocation } = useContext(GlobalContext);
+  const { userRegister, getCurrentLocation, fetching } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue } = useForm();
 
@@ -54,7 +54,7 @@ const Register = ({ navigation }) => {
         placeholder=" Password"
         secureTextEntry={true}
       />
-      <Button onPress={handleSubmit(registerUser)} title="Register" style={styles.input} />
+      <Button loading={fetching} onPress={handleSubmit(registerUser)} title="Register" style={styles.input} />
     </View>
   )
 }
