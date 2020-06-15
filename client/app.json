@@ -26,7 +26,12 @@
     },
     "android": {
       "package": "com.project.maptracker",
-      "versionCode": 1
+      "versionCode": 1,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDm5n8nPygZYEiQwV8yJR6I5_l8eu4n8sk"
+        }
+      }
     }
   }
 }

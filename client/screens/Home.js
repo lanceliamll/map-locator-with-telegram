@@ -71,39 +71,41 @@ const Home = ({ navigation }) => {
   }, [navigation]);
 
   if (fetching) return <ActivityIndicator size="large" color="#0000ff" />;
-  return (
-    <View>
-      {currentPosition !== null ? (
-        <MapView
-          initialRegion={{
-            latitude: currentPosition.coords.latitude,
-            longitude: currentPosition.coords.longitude,
-            latitudeDelta: 0,
-            longitudeDelta: 0,
-          }}
-          style={styles.mapStyle}
-        >
-
-          {/* render markers */}
-          {markers.length ? transformMarkersData(markers).map((mark, idx) => {
-            return (
-              <View key={idx}>
-                {mark.length < 0 ? null : mark.map((m, idx) => {
-                  return (
-                    <View key={idx}>
-                      <Marker
-                        coordinate={m.coords}
-                      />
-                    </View>
-                  )
-                })}
-              </View>
-            )
-          }) : null}
-        </MapView>
-      ) : null}
-    </View>
-  )
+  else {
+    return (
+      <View>
+        {currentPosition !== null ? (
+          <MapView
+            initialRegion={{
+              latitude: currentPosition.coords.latitude,
+              longitude: currentPosition.coords.longitude,
+              latitudeDelta: 0,
+              longitudeDelta: 0,
+            }}
+            style={styles.mapStyle}
+          >
+  
+            {/* render markers */}
+            {markers.length ? transformMarkersData(markers).map((mark, idx) => {
+              return (
+                <View key={idx}>
+                  {mark.length < 0 ? null : mark.map((m, idx) => {
+                    return (
+                      <View key={idx}>
+                        <Marker
+                          coordinate={m.coords}
+                        />
+                      </View>
+                    )
+                  })}
+                </View>
+              )
+            }) : null}
+          </MapView>
+        ) : null}
+      </View>
+    )
+  }
 }
 
 export default Home;
