@@ -8,7 +8,7 @@ import MapView, { Marker } from 'react-native-maps';
 const Home = ({ navigation }) => {
 
   // get globalstate
-  const { fetching, auth, getAllMarkers, markers, saveLocation, getUserSavedLocation, logout } = useContext(GlobalContext);
+  const { fetching, auth, getAllMarkers, markers, logout } = useContext(GlobalContext);
   // current location
   const [currentPosition, setCurrentPosition] = useState(null);
 
@@ -61,58 +61,52 @@ const Home = ({ navigation }) => {
 
     getAllMarkers();
     getCurrentPosition();
-    // getUserSavedLocation(auth.user.id);
 
     // get every 30 minutes
-    setTimeout(() => {
-      getAllMarkers();
-      getCurrentPosition();
-    }, 1800000);
-
-    console.log("is fetching",fetching)
+    // setTimeout(() => {
+    //   getAllMarkers();
+    //   getCurrentPosition();
+    // }, 1800000);
 
   }, [navigation]);
 
   if (fetching) return <ActivityIndicator size="large" color="#0000ff" />;
-  try {
-    return (
-      <View>
-        {currentPosition !== null ? (
-          <MapView
-            initialRegion={{
-              latitude: currentPosition.coords.latitude,
-              longitude: currentPosition.coords.longitude,
-              latitudeDelta: 0,
-              longitudeDelta: 0,
-            }}
-            style={styles.mapStyle}
-          >
+  return (
+    <View>
+      {currentPosition !== null ? (
+        <MapView
+          initialRegion={{
+            latitude: currentPosition.coords.latitude,
+            longitude: currentPosition.coords.longitude,
+            latitudeDelta: 0,
+            longitudeDelta: 0,
+          }}
+          style={styles.mapStyle}
+        >
 
-            {/* render markers */}
-            {markers.length ? transformMarkersData(markers).map((mark, idx) => {
-              return (
-                <View key={idx}>
-                  {mark.length < 0 ? null : mark.map((m, idx) => {
-                    return (
-                      <View key={idx}>
-                        <Marker
-                          coordinate={m.coords}
-                        />
-                      </View>
-                    )
-                  })}
-                </View>
-              )
-            }) : null}
-
-          </MapView>
-        ) : null}
-      </View>
-    )
-  } catch (error) {
-    console.log("ERR", error)
-  }
+          {/* render markers */}
+          {markers.length ? transformMarkersData(markers).map((mark, idx) => {
+            return (
+              <View key={idx}>
+                {mark.length < 0 ? null : mark.map((m, idx) => {
+                  return (
+                    <View key={idx}>
+                      <Marker
+                        coordinate={m.coords}
+                      />
+                    </View>
+                  )
+                })}
+              </View>
+            )
+          }) : null}
+        </MapView>
+      ) : null}
+    </View>
+  )
 }
+
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -127,4 +121,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;

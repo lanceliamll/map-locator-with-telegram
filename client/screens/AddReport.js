@@ -30,8 +30,22 @@ const AddReport = ({ navigation }) => {
     )
   }
 
+  const getCurrentPosition = () => {
+    // get current location 
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        // const locationWithId = Object.assign({ data: position }, { user: auth.user.id });
+        const location = JSON.stringify(position);
+        setCurrentPosition(JSON.parse(location));
+      },
+      error => Alert.alert(error.message),
+      { enableHighAccuracy: true, timeout: 1000, maximumAge: 1000 }
+    );
+  };
+
   // getLocations to be mapped
   useEffect(() => {
+    getCurrentPosition();
 
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
