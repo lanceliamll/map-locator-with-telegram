@@ -104,7 +104,7 @@ const Profile = ({ navigation }) => {
           size="xlarge"
           rounded
           source={{
-            uri: "https://map-tracker-tele.herokuapp.com" + auth.user.profilePic.url || null
+            uri: """" + auth.user.profilePic.url || null
           }}
         /> */}
       </View>
