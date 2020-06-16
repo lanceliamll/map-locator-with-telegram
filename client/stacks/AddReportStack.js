@@ -8,7 +8,7 @@ const AddReportStack = createStackNavigator();
 const AddReportStackScreen = () => {
   return (
     <AddReportStack.Navigator>
-      <AddReportStack.Screen name="Report Location" component={AddReport}/>
+      <AddReportStack.Screen options={{ headerTitleStyle:{ fontSize: 15 }}} name="Symptoms/Location Reports" component={AddReport}/>
     </AddReportStack.Navigator>
   )
 }

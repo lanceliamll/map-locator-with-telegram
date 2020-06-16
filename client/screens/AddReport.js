@@ -90,7 +90,9 @@ const AddReport = ({ navigation }) => {
     if (currentLocation === null) {
       Alert.alert("Location Error", "Please turn on your GPS and try again.")
       getCurrentLocation();
-    }else if (!severe && !common && !uncommon){
+    } else if (formData.mobileNumber === null || formData.mobileNumber === undefined) {
+      Alert.alert("Error", "Mobile number is required.")
+    } else if (!severe && !common && !uncommon){
       Alert.alert("Error", "You should atleat select 1 symptom category.")
     } else {
       axios.post("https://api.telegram.org/bot1139102468:AAG53n8z57t1t4vnrkDWQJgoM7o03OW5c5o/sendMessage", {
@@ -177,12 +179,12 @@ const AddReport = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* <TextInput
+      <TextInput
         onChangeText={text => setValue("mobileNumber", text)}
         style={styles.input}
         placeholder=" Mobile Number"
         keyboardType="numeric"
-      /> */}
+      />
 
       <View >
         <View style={styles.checkBoxes}>

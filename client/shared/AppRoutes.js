@@ -18,7 +18,7 @@ const AppRoutes = () => {
           <>
             <DrawerStack.Screen name="Profile" component={ProfileStackScreen} />
             <DrawerStack.Screen name="Home" component={HomeStackScreen} />
-            <DrawerStack.Screen name="Report Case/Location" component={AddReportStackScreen} />
+            <DrawerStack.Screen name="Report Symptoms/Location " component={AddReportStackScreen} />
             <DrawerStack.Screen name="Precaution" component={PrecautionStackScreen} />
             <DrawerStack.Screen name="About" component={AboutStackScreen} />
 
