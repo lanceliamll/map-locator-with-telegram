@@ -13,22 +13,7 @@
       "plugin": "users-permissions",
       "model": "user"
     },
-    "longitude": {
-      "type": "float"
-    },
-    "latitude": {
-      "type": "float"
-    },
-    "title": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
-    },
     "data": {
-      "type": "json"
-    },
-    "symptoms": {
       "type": "json"
     },
     "mobileNumber": {

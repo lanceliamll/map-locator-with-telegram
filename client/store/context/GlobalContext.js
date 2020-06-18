@@ -24,7 +24,7 @@ export const GlobalProvider = ({ children }) => {
       payload: true
     });
     try {
-      const res = await axios.get("""/markers", {
+      const res = await axios.get("https://map-tracker-tele.herokuapp.com/markers", {
         headers: {
           "Content-Type": "application/json"
         }
@@ -69,7 +69,7 @@ export const GlobalProvider = ({ children }) => {
         payload: true
       });
 
-      const res = await axios.get(`""/saved-locations?user.id=${id}`, {
+      const res = await axios.get(`https://map-tracker-tele.herokuapp.com/saved-locations?user.id=${id}`, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -104,7 +104,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post("""/auth/local", body, {
+      const res = await axios.post("https://map-tracker-tele.herokuapp.com/auth/local", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -147,7 +147,7 @@ export const GlobalProvider = ({ children }) => {
     });
 
     try {
-      await axios.post("""/auth/local/register", body, {
+      await axios.post("https://map-tracker-tele.herokuapp.com/auth/local/register", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -182,7 +182,7 @@ export const GlobalProvider = ({ children }) => {
     });
 
     try {
-      const res = await axios.post("""/markers", body, {
+      const res = await axios.post("https://map-tracker-tele.herokuapp.com/markers", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -212,7 +212,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post('""/saved-locations', body, {
+      const res = await axios.post('https://map-tracker-tele.herokuapp.com/saved-locations', body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -234,12 +234,12 @@ export const GlobalProvider = ({ children }) => {
     }
     const body = JSON.stringify(token);
 
-    axios.get("""/tokens")
+    axios.get("https://map-tracker-tele.herokuapp.com/tokens")
       .then(res => {
         res.data.map(d => {
           // if no data post
           if (!res.data.length) {
-            axios.post("""/tokens", body,
+            axios.post("https://map-tracker-tele.herokuapp.com/tokens", body,
               {
                 headers: {
                   "Content-Type": "application/json"
@@ -250,7 +250,7 @@ export const GlobalProvider = ({ children }) => {
               .catch(err => console.log("Failed POST"))
           } else {
             // else put
-            axios.put(`""/tokens/${d.id}`, body, {
+            axios.put(`https://map-tracker-tele.herokuapp.com/tokens/${d.id}`, body, {
               headers: {
                 "Content-Type": "application/json"
 
@@ -267,7 +267,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(age);
 
     try {
-      const res = await axios.put(`""/users/${id}`, body, {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -287,7 +287,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(gen);
 
     try {
-      const res = await axios.put(`""/users/${id}`, body, {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -307,7 +307,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(mun);
 
     try {
-      const res = await axios.put(`""/users/${id}`, body, {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 

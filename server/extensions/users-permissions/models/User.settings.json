@@ -57,9 +57,6 @@
       "collection": "saved-locations",
       "via": "user"
     },
-    "name": {
-      "type": "string"
-    },
     "age": {
       "type": "string"
     },
