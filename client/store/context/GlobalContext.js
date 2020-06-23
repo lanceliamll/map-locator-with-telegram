@@ -6,6 +6,7 @@ const initialState = {
   auth: null,
   markers: [],
   savedLocations: [],
+  userMarkers: [],
   currentLocation: null,
   fetching: false,
   error: null
@@ -24,7 +25,7 @@ export const GlobalProvider = ({ children }) => {
       payload: true
     });
     try {
-      const res = await axios.get("""/markers", {
+      const res = await axios.get("localhost:5677/markers", {
         headers: {
           "Content-Type": "application/json"
         }
@@ -69,7 +70,7 @@ export const GlobalProvider = ({ children }) => {
         payload: true
       });
 
-      const res = await axios.get(`""/saved-locations?user.id=${id}`, {
+      const res = await axios.get(`localhost:5677/saved-locations?user.id=${id}`, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -104,7 +105,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post("""/auth/local", body, {
+      const res = await axios.post("localhost:5677/auth/local", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -147,7 +148,7 @@ export const GlobalProvider = ({ children }) => {
     });
 
     try {
-      await axios.post("""/auth/local/register", body, {
+      await axios.post("localhost:5677/auth/local/register", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -182,7 +183,7 @@ export const GlobalProvider = ({ children }) => {
     });
 
     try {
-      const res = await axios.post("""/markers", body, {
+      const res = await axios.post("localhost:5677/markers", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -212,7 +213,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post('""/saved-locations', body, {
+      const res = await axios.post('localhost:5677/saved-locations', body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -234,12 +235,12 @@ export const GlobalProvider = ({ children }) => {
     }
     const body = JSON.stringify(token);
 
-    axios.get("""/tokens")
+    axios.get("localhost:5677/tokens")
       .then(res => {
         res.data.map(d => {
           // if no data post
           if (!res.data.length) {
-            axios.post("""/tokens", body,
+            axios.post("localhost:5677/tokens", body,
               {
                 headers: {
                   "Content-Type": "application/json"
@@ -250,7 +251,7 @@ export const GlobalProvider = ({ children }) => {
               .catch(err => console.log("Failed POST"))
           } else {
             // else put
-            axios.put(`""/tokens/${d.id}`, body, {
+            axios.put(`localhost:5677/tokens/${d.id}`, body, {
               headers: {
                 "Content-Type": "application/json"
 
@@ -267,7 +268,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(age);
 
     try {
-      const res = await axios.put(`""/users/${id}`, body, {
+      const res = await axios.put(`localhost:5677/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -287,7 +288,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(gen);
 
     try {
-      const res = await axios.put(`""/users/${id}`, body, {
+      const res = await axios.put(`localhost:5677/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -307,7 +308,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(mun);
 
     try {
-      const res = await axios.put(`""/users/${id}`, body, {
+      const res = await axios.put(`localhost:5677/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -322,6 +323,38 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  const getMarkersByUser = async id => {
+    dispatch({
+      type: "FETCH",
+      payload: true
+    });
+    try {
+      const res = await axios.get(`localhost:5677/markers?user.id=${id}`, {
+        headers: {
+          "Content-Type": "application/json"
+
+        }
+      });
+
+      dispatch({
+        type: "GET_USER_MARKERS",
+        payload: res.data
+      });
+
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
+
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: "FETCH",
+        payload: true
+      });
+    }
+  }
+
 
   return (
     <GlobalContext.Provider value={{
@@ -331,6 +364,7 @@ export const GlobalProvider = ({ children }) => {
       fetching: state.fetching,
       savedLocations: state.savedLocations,
       error: state.error,
+      userMarkers: state.userMarkers,
       login,
       logout,
       userRegister,
@@ -342,7 +376,8 @@ export const GlobalProvider = ({ children }) => {
       storeTokenWithUser,
       saveAge,
       saveGender,
-      saveMunicipality
+      saveMunicipality,
+      getMarkersByUser
     }}>
       {children}
     </GlobalContext.Provider>

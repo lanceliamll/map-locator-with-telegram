@@ -86,7 +86,7 @@ const AddReport = ({ navigation }) => {
         }
       ]
     }
-
+    
     if (currentLocation === null) {
       Alert.alert("Location Error", "Please turn on your GPS and try again.")
       getCurrentLocation();
@@ -206,7 +206,21 @@ const AddReport = ({ navigation }) => {
       </View>
 
       <View style={styles.reportButton}>
-        <Button loading={fetching} onPress={handleSubmit(report)} title="Report" style={styles.input} />
+        <Button loading={fetching} onPress={() => {
+          Alert.alert("Warning", "Are you sure you want to continue? This action cannot be undone",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            {
+              text :"Ok",
+              onPress: handleSubmit(report),
+            }
+          ])
+     
+        }} title="Report" style={styles.input} />
         <Text>Note: Your location will be automatically submitted with this form.</Text>
       </View>
     </View>

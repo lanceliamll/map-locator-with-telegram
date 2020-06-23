@@ -12,6 +12,11 @@ const GlobalReducer = (state, action) => {
         ...state,
         markers: payload
       }
+    case "GET_USER_MARKERS":
+      return {
+        ...state,
+        userMarkers: payload
+      }
     case "SAVE_LOCATION":
       return {
         ...state,

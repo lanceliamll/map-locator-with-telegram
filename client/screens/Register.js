@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useState,  useContext } from "react";
 import { Text, TextInput, View, StyleSheet, Alert } from "react-native";
 import { GlobalContext } from "../store/context/GlobalContext";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ const Register = ({ navigation }) => {
   const { userRegister, getCurrentLocation, fetching } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue } = useForm();
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     navigation.setOptions({
@@ -28,8 +29,11 @@ const Register = ({ navigation }) => {
       email === null ||
       email === undefined ||
       password === null ||
-      password === undefined) Alert.alert("Error", "Please fill out all the mandatory fields");
-    else {
+      password === undefined) {
+      Alert.alert("Error", "Please fill out all the mandatory fields");   
+    } else if (password !== confirmPassword) {
+      Alert.alert("Error", "Password doesnt match");
+    }else {
       userRegister(formData);
       Alert.alert("Success", "Registered Successfully");
       navigation.navigate("Login")
@@ -52,6 +56,12 @@ const Register = ({ navigation }) => {
         onChangeText={text => setValue("password", text)}
         style={styles.input}
         placeholder=" Password"
+        secureTextEntry={true}
+      />
+       <TextInput
+        onChangeText={text => setConfirmPassword(text)}
+        style={styles.input}
+        placeholder=" Confirm Password"
         secureTextEntry={true}
       />
       <Button loading={fetching} onPress={handleSubmit(registerUser)} title="Register" style={styles.input} />

@@ -4,6 +4,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerI
 import { GlobalContext } from "../store/context/GlobalContext";
 import { HomeStackScreen, ProfileStackScreen, SetupStackScreen, AboutStackScreen, AddReportStackScreen, PrecautionStackScreen, LoginStackScreen, RegisterStackScreen } from '../stacks';
 import { DrawerContent } from "./DrawerContent";
+import UserReportsScreen from "../stacks/UserReportsStack";
 
 const DrawerStack = createDrawerNavigator();
 
@@ -19,6 +20,7 @@ const AppRoutes = () => {
             <DrawerStack.Screen name="Profile" component={ProfileStackScreen} />
             <DrawerStack.Screen name="Home" component={HomeStackScreen} />
             <DrawerStack.Screen name="Report Symptoms/Location " component={AddReportStackScreen} />
+            <DrawerStack.Screen name="User Reports" component={UserReportsScreen} />
             <DrawerStack.Screen name="Precaution" component={PrecautionStackScreen} />
             <DrawerStack.Screen name="About" component={AboutStackScreen} />
 
