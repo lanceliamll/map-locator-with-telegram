@@ -53,10 +53,6 @@
       "plugin": "users-permissions",
       "configurable": false
     },
-    "saved_locations": {
-      "collection": "saved-locations",
-      "via": "user"
-    },
     "age": {
       "type": "string"
     },

@@ -63,6 +63,11 @@ const GlobalReducer = (state, action) => {
           user: payload
         }
       }
+    case "GET_USER_TEMPS":
+      return {
+        ...state,
+        userTemps: payload
+      }
     default:
       return state;
   }

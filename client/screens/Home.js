@@ -20,7 +20,7 @@ const Home = ({ navigation }) => {
         const location = JSON.stringify(position);
         setCurrentPosition(JSON.parse(location));
       },
-      error => Alert.alert(error.message),
+      error => console.log(error),
       { enableHighAccuracy: true, timeout: 1000, maximumAge: 1000 }
     );
   };

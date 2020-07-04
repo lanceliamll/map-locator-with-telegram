@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Text, Button, ScrollView, View, Alert, ActivityIndicator, StyleSheet, Dimensions } from "react-native";
+import { Text, ScrollView, View, Alert, ActivityIndicator, StyleSheet, Dimensions } from "react-native";
 import { GlobalContext } from "../store/context/GlobalContext";
-import { Icon } from "react-native-elements";
+import { Icon, Button } from "react-native-elements";
 import dayjs from "dayjs";
 
 const UserReports = ({ navigation }) => {
@@ -10,11 +10,11 @@ const UserReports = ({ navigation }) => {
   const { auth, getMarkersByUser, userMarkers, fetching } = useContext(GlobalContext);
 
   useEffect(() => {
-    getMarkersByUser(auth.user.id);
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
       headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
     });
+    getMarkersByUser(auth.user.id);
   }, []);
 
 
@@ -34,6 +34,10 @@ const UserReports = ({ navigation }) => {
   if (fetching) return <ActivityIndicator size="large" color="#0000ff" />;
   return (
     <ScrollView style={styles.listContainer}>
+       <View style={styles.titleRefresh}>
+          <Text style={styles.boldText}>User Reports</Text>
+          <Button loading={fetching} title="Refresh" onPress={() => getMarkersByUser(auth.user.id)} />
+        </View>
       {!userMarkers.length ? null : userMarkers.map((marker, idx) => {
         const { data } = marker.data[0];
         return (
@@ -52,13 +56,13 @@ const UserReports = ({ navigation }) => {
               Severe Symptom: <Text style={styles.boldText}>{marker.severe ? "True" : "False"}</Text>
             </Text>
             <Text>
-              Common Symptom: <Text style={styles.boldText}>{marker.severe ? "True" : "False"}</Text>
+              Common Symptom: <Text style={styles.boldText}>{marker.common ? "True" : "False"}</Text>
             </Text>
             <Text>
-              Uncommon Symptom: <Text style={styles.boldText}>{marker.severe ? "True" : "False"}</Text>
+              Uncommon Symptom: <Text style={styles.boldText}>{marker.uncommon ? "True" : "False"}</Text>
             </Text>
             <Text>
-              Registered Mobile Number: <Text style={styles.boldText}>{marker.mobileNum ? marker.mobileNum : "N/A"}</Text>
+              Registered Mobile Number: <Text style={styles.boldText}>{marker.mobileNumber ? marker.mobileNumber : "N/A"}</Text>
             </Text>
           </View>
         )
@@ -74,7 +78,8 @@ const styles = StyleSheet.create({
   listContainer: {
     width: "100%",
     height: "100%",
-    overflow: "scroll"
+    overflow: "scroll",
+    padding: 10
   },
   listCard: {
     borderColor: "black",
@@ -86,5 +91,12 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: "bold",
     fontSize: 16
+  },
+  titleRefresh: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
   }
 });

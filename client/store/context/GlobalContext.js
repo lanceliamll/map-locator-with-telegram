@@ -7,6 +7,7 @@ const initialState = {
   markers: [],
   savedLocations: [],
   userMarkers: [],
+  userTemps: [],
   currentLocation: null,
   fetching: false,
   error: null
@@ -25,7 +26,7 @@ export const GlobalProvider = ({ children }) => {
       payload: true
     });
     try {
-      const res = await axios.get("localhost:5677/markers", {
+      const res = await axios.get("https://map-tracker-tele.herokuapp.com/markers", {
         headers: {
           "Content-Type": "application/json"
         }
@@ -70,13 +71,11 @@ export const GlobalProvider = ({ children }) => {
         payload: true
       });
 
-      const res = await axios.get(`localhost:5677/saved-locations?user.id=${id}`, {
+      const res = await axios.get(`https://map-tracker-tele.herokuapp.com/saved-locations?user.id=${id}`, {
         headers: {
           "Content-Type": "application/json"
         }
       });
-
-      console.log(res.data);
 
       dispatch({
         type: "GET_SAVED_LOCATION",
@@ -105,7 +104,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post("localhost:5677/auth/local", body, {
+      const res = await axios.post("https://map-tracker-tele.herokuapp.com/auth/local", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -148,7 +147,7 @@ export const GlobalProvider = ({ children }) => {
     });
 
     try {
-      await axios.post("localhost:5677/auth/local/register", body, {
+      await axios.post("https://map-tracker-tele.herokuapp.com/auth/local/register", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -183,7 +182,7 @@ export const GlobalProvider = ({ children }) => {
     });
 
     try {
-      const res = await axios.post("localhost:5677/markers", body, {
+      const res = await axios.post("https://map-tracker-tele.herokuapp.com/markers", body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -199,6 +198,10 @@ export const GlobalProvider = ({ children }) => {
         payload: false
       });
 
+      return {
+        success: true
+      }
+
     } catch (error) {
       dispatch({
         type: "FETCH",
@@ -213,7 +216,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(data);
 
     try {
-      const res = await axios.post('localhost:5677/saved-locations', body, {
+      const res = await axios.post('https://map-tracker-tele.herokuapp.com/saved-locations', body, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -235,12 +238,12 @@ export const GlobalProvider = ({ children }) => {
     }
     const body = JSON.stringify(token);
 
-    axios.get("localhost:5677/tokens")
+    axios.get("https://map-tracker-tele.herokuapp.com/tokens")
       .then(res => {
         res.data.map(d => {
           // if no data post
           if (!res.data.length) {
-            axios.post("localhost:5677/tokens", body,
+            axios.post("https://map-tracker-tele.herokuapp.com/tokens", body,
               {
                 headers: {
                   "Content-Type": "application/json"
@@ -251,7 +254,7 @@ export const GlobalProvider = ({ children }) => {
               .catch(err => console.log("Failed POST"))
           } else {
             // else put
-            axios.put(`localhost:5677/tokens/${d.id}`, body, {
+            axios.put(`https://map-tracker-tele.herokuapp.com/tokens/${d.id}`, body, {
               headers: {
                 "Content-Type": "application/json"
 
@@ -268,7 +271,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(age);
 
     try {
-      const res = await axios.put(`localhost:5677/users/${id}`, body, {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -288,7 +291,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(gen);
 
     try {
-      const res = await axios.put(`localhost:5677/users/${id}`, body, {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -308,7 +311,7 @@ export const GlobalProvider = ({ children }) => {
     const body = JSON.stringify(mun);
 
     try {
-      const res = await axios.put(`localhost:5677/users/${id}`, body, {
+      const res = await axios.put(`https://map-tracker-tele.herokuapp.com/users/${id}`, body, {
         headers: {
           "Content-Type": "application/json"
 
@@ -329,7 +332,7 @@ export const GlobalProvider = ({ children }) => {
       payload: true
     });
     try {
-      const res = await axios.get(`localhost:5677/markers?user.id=${id}`, {
+      const res = await axios.get(`https://map-tracker-tele.herokuapp.com/markers?user.id=${id}&_sort=id:DESC`, {
         headers: {
           "Content-Type": "application/json"
 
@@ -338,6 +341,38 @@ export const GlobalProvider = ({ children }) => {
 
       dispatch({
         type: "GET_USER_MARKERS",
+        payload: res.data
+      });
+
+      dispatch({
+        type: "FETCH",
+        payload: false
+      });
+
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: "FETCH",
+        payload: true
+      });
+    }
+  }
+
+  const getUserTemps = async id => {
+    dispatch({
+      type: "FETCH",
+      payload: true
+    });
+    try {
+      const res = await axios.get(`https://map-tracker-tele.herokuapp.com/usertemps?user.id=${id}&_sort=id:DESC`, {
+        headers: {
+          "Content-Type": "application/json"
+
+        }
+      });
+
+      dispatch({
+        type: "GET_USER_TEMPS",
         payload: res.data
       });
 
@@ -365,6 +400,7 @@ export const GlobalProvider = ({ children }) => {
       savedLocations: state.savedLocations,
       error: state.error,
       userMarkers: state.userMarkers,
+      userTemps: state.userTemps,
       login,
       logout,
       userRegister,
@@ -377,7 +413,8 @@ export const GlobalProvider = ({ children }) => {
       saveAge,
       saveGender,
       saveMunicipality,
-      getMarkersByUser
+      getMarkersByUser,
+      getUserTemps
     }}>
       {children}
     </GlobalContext.Provider>

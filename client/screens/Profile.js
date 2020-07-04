@@ -1,29 +1,31 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, Button, View, Alert, StyleSheet, Modal, TextInput } from "react-native";
+import { Text, View, Alert, StyleSheet, Modal, TextInput, ScrollView } from "react-native";
 import { GlobalContext } from "../store/context/GlobalContext";
-import { Icon, Avatar } from "react-native-elements";
+import { Icon, Button } from "react-native-elements";
 import RNPickerSelect from 'react-native-picker-select';
 import citiesJSON from "../helpers/cities.json"
+import dayjs from "dayjs"
+import axios from "axios";
 
 const Profile = ({ navigation }) => {
 
   // get global
-  const { auth, logout, storeTokenWithUser, saveAge, saveGender, saveMunicipality } = useContext(GlobalContext);
+  const { auth, logout, storeTokenWithUser, saveAge, saveGender, saveMunicipality, userTemps } = useContext(GlobalContext);
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <Icon name='menu' onPress={() => navigation.openDrawer()} />,
-      headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />,
+      headerRight: () => <Icon name='exit-to-app' onPress={logoutToApp} />
     });
 
     const userToken = {
       userToken: "Bearer " + auth.jwt,
       id: auth.user.id
     }
-    console.log(userToken)
-
     storeTokenWithUser(userToken);
     if (!allMunicip.length) setAllMunicip(transformUserMunicip(citiesJSON));
+
+    getUserTemps(auth.user.id);
   }, [storeTokenWithUser]);
 
   //modal
@@ -36,7 +38,9 @@ const Profile = ({ navigation }) => {
   const [userGender, setUserGender] = useState(auth.gender || null);
   const [userMunicip, setUserMunicip] = useState(auth.municipality || null);
 
-  const [allMunicip, setAllMunicip] = useState([])
+  const [allMunicip, setAllMunicip] = useState([]);
+  const [currentUserTemps, setCurrentUserTemps] = useState([]);
+  const [localFetching, setLocalFetching] = useState(false);
 
   const transformUserMunicip = (cities) => {
     return cities.map(city => {
@@ -45,6 +49,19 @@ const Profile = ({ navigation }) => {
         value: city.name
       }
     });
+  }
+
+  const getUserTemps = (id) => {
+    setLocalFetching(true);
+    axios.get(`https://map-tracker-tele.herokuapp.com/usertemps?user.id=${id}&_sort=id:DESC`)
+      .then(response => {
+        setLocalFetching(false);
+        setCurrentUserTemps(response.data);
+      })
+      .catch(err => {
+        setLocalFetching(false);
+        console.log(err)
+      })
   }
 
   const logoutToApp = () => {
@@ -64,7 +81,6 @@ const Profile = ({ navigation }) => {
 
   const submitAge = age => {
     const { id } = auth.user;
-    console.log(id)
     const data = {
       age
     }
@@ -97,7 +113,7 @@ const Profile = ({ navigation }) => {
   if (auth.user === null) return null;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.photo}>
         {/* {console.log(auth.user.profilePic.url)}
         <Avatar
@@ -108,6 +124,7 @@ const Profile = ({ navigation }) => {
           }}
         /> */}
       </View>
+      <Text style={styles.boldText}>User Information</Text>
       <View style={styles.textTitleContainer}>
         <Text style={styles.textTitle}>Username:</Text>
         <Text style={styles.textLabel}>{username || null}</Text>
@@ -206,7 +223,25 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </View>
+
+      <View style={styles.userTempContainer}>
+        <View style={styles.titleRefresh}>
+          <Text style={styles.boldText}>User Temperature</Text>
+          <Button loading={localFetching} title="Refresh" onPress={() => getUserTemps(auth.user.id)} />
+        </View>
+        {!currentUserTemps.length ? <View>
+          <Text style={styles.boldText}>The user haven't check temperature yet.</Text>
+        </View>
+          : currentUserTemps.map(data => {
+            return (
+              <View style={styles.listCard} key={data.id}>
+                <Text>Temperature: <Text style={styles.boldText}>{data.currentTemperature}</Text></Text>
+                <Text>Date Scanned: <Text style={styles.boldText}>{dayjs(data.createdAt).format("MMMM DD YYYY, h:mm A")}</Text></Text>
+              </View>
+            )
+          })}
+      </View>
+    </ScrollView>
   )
 }
 
@@ -216,7 +251,10 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
     paddingRight: 10,
-    paddingLeft: 10
+    paddingLeft: 10,
+    overflow: "scroll",
+    height: '100%',
+    width: '100%'
   },
   input: {
     marginTop: 15,
@@ -284,6 +322,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10
+  },
+  userTempContainer: {
+    paddingTop: 20,
+    paddingBottom: 20
+  },
+  listCard: {
+    borderColor: "black",
+    borderWidth: 1,
+    margin: 5,
+    padding: 10,
+    borderRadius: 5,
+  },
+  boldText: {
+    fontWeight: "bold",
+    fontSize: 16
+  },
+  titleRefresh: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
   }
 })
 

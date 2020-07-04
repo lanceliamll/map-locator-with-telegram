@@ -7,7 +7,7 @@ import axios from "axios";
 
 const AddReport = ({ navigation }) => {
   // store
-  const { auth, markers, fetching,  currentLocation, getCurrentLocation, reportLocation, logout, getAllMarkers } = useContext(GlobalContext);
+  const { auth, markers, getMarkersByUser,  currentLocation, getCurrentLocation, reportLocation, logout, getAllMarkers } = useContext(GlobalContext);
 
   const { register, handleSubmit, setValue } = useForm();
 
@@ -38,7 +38,7 @@ const AddReport = ({ navigation }) => {
         const location = JSON.stringify(position);
         setCurrentPosition(JSON.parse(location));
       },
-      error => Alert.alert(error.message),
+      error => console.log(error),
       { enableHighAccuracy: true, timeout: 1000, maximumAge: 1000 }
     );
   };
@@ -104,10 +104,21 @@ const AddReport = ({ navigation }) => {
       }).catch(err => console.log(err))
 
       const form = Object.assign({}, formData, otherData, locationData);
-      reportLocation(form);
-      Alert.alert('Success', "Reported Successfully");
-      getAllMarkers();
-      navigation.goBack();
+      reportLocation(form)
+      .then(res => {
+        if(res.success) {
+        Alert.alert('Success', "Reported Successfully");
+        setSevere(false);
+        setCommon(false);
+        setUncommon(false);
+        setCommunityCases(false);
+        getAllMarkers();
+        getMarkersByUser(auth.user.id);
+        navigation.goBack();
+      } else {
+        Alert.alert('Error', 'There was a problem processing your request. Please try again.')
+      }
+      });
     }
   }
 
@@ -206,7 +217,7 @@ const AddReport = ({ navigation }) => {
       </View>
 
       <View style={styles.reportButton}>
-        <Button loading={fetching} onPress={() => {
+        <Button onPress={() => {
           Alert.alert("Warning", "Are you sure you want to continue? This action cannot be undone",
           [
             {
